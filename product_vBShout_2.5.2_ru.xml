@@ -1,0 +1,1229 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<product productid="_inferno_shoutbox" active="0">
+	<title>Inferno vBShout</title>
+	<description>×àò ðåàëüíîãî âðåìåíè. Ïåðåâîä - Traxalo | Ìîäèôèêàöèÿ alex Roosso</description>
+	<version>2.5.2</version>
+	<url><![CDATA[http://www.vbsupport.org/forum/showthread.php?t=28634]]></url>
+	<versioncheckurl />
+	<dependencies>
+	</dependencies>
+	<codes>
+		<code version="1.0.0">
+			<installcode><![CDATA[$db->reporterror = false;
+$db->query("CREATE TABLE `" . TABLE_PREFIX . "infernoshout` (
+  `sid` int(15) NOT NULL auto_increment,
+  `s_user` int(15) NOT NULL default '0',
+  `s_time` int(15) NOT NULL default '0',
+  `s_shout` text NOT NULL,
+  `s_me` enum('0','1') NOT NULL default '0',
+  PRIMARY KEY  (`sid`)
+) TYPE=MyISAM");
+$db->query("CREATE TABLE `" . TABLE_PREFIX . "infernoshoutsessions` (
+  `sid` int(15) NOT NULL auto_increment,
+  `s_user` int(15) NOT NULL,
+  `s_activity` int(15) NOT NULL,
+  PRIMARY KEY  (`sid`),
+  KEY `s_activity` (`s_activity`)
+) TYPE=MyISAM");
+$db->query("CREATE TABLE `" . TABLE_PREFIX . "infernoshoutusers` (
+  `s_user` int(15) NOT NULL auto_increment,
+  `s_bold` enum('1','0') NOT NULL default '0',
+  `s_italic` enum('1','0') NOT NULL default '0',
+  `s_underline` enum('1','0') NOT NULL default '0',
+  `s_color` varchar(20) NOT NULL,
+  `s_font` varchar(50) NOT NULL,
+  PRIMARY KEY  (`s_user`)
+) TYPE=MyISAM");
+$db->query("insert into " . TABLE_PREFIX . "infernoshout (s_user, s_time, s_shout) values (1, " . TIMENOW . ", 'Inferno vBShout óñïåøíî óñòàíîâëåí. Âû ìîæåòå èñïîëüçîâàòü êîììàíäó /prune  ÷òîáû óáðàòü ýòî ñîîáùåíèå. Ìû ðåêîìåíäóåì âàì ñíà÷àëà ïðîâåñòè íàñòðîéêè ÷àòà.')");
+$db->reporterror = false;
+$db->query("ALTER TABLE `" . TABLE_PREFIX . "infernoshoutusers` ADD `s_silenced` ENUM( '1', '0' ) NOT NULL DEFAULT '0';");
+$db->query("ALTER TABLE `" . TABLE_PREFIX . "infernoshoutusers` ADD `s_ignored` TEXT NOT NULL ;");
+$db->query("ALTER TABLE `" . TABLE_PREFIX . "infernoshout` ADD `s_private` INT( 15 ) NOT NULL DEFAULT '-1';");
+$db->reporterror = true;]]></installcode>
+			<uninstallcode><![CDATA[$db->reporterror = false;
+$db->query("DROP TABLE `" . TABLE_PREFIX . "infernoshout`");
+$db->query("DROP TABLE `" . TABLE_PREFIX . "infernoshoutsessions`");
+$db->query("DROP TABLE `" . TABLE_PREFIX . "infernoshoutusers`");
+$db->reporterror = true;]]></uninstallcode>
+		</code>
+		<code version="1.0.1">
+			<installcode><![CDATA[$db->reporterror = false;
+$db->query("ALTER TABLE `" . TABLE_PREFIX . "infernoshoutusers` ADD `s_silenced` ENUM( '1', '0' ) NOT NULL DEFAULT '0';");
+$db->query("ALTER TABLE `" . TABLE_PREFIX . "infernoshoutusers` ADD `s_ignored` TEXT NOT NULL ;");
+$db->query("ALTER TABLE `" . TABLE_PREFIX . "infernoshout` ADD `s_private` INT( 15 ) NOT NULL DEFAULT '-1';");
+$db->query("insert into " . TABLE_PREFIX . "infernoshout (s_user, s_time, s_shout) values (1, " . (TIMENOW + 1) . ", ''Ïîçäðàâëÿåì, áûëî ïðîèçâåäåíî îáíîâëåíèå ê Shoutbox Pro!')");
+$db->reporterror = true;]]></installcode>
+			<uninstallcode><![CDATA[$db->reporterror = false;
+$db->query("DROP TABLE `" . TABLE_PREFIX . "infernoshout`");
+$db->query("DROP TABLE `" . TABLE_PREFIX . "infernoshoutsessions`");
+$db->query("DROP TABLE `" . TABLE_PREFIX . "infernoshoutusers`");
+$db->reporterror = true;]]></uninstallcode>
+		</code>
+		<code version="2.0.0">
+			<installcode><![CDATA[$db->reporterror = false;
+$db->query("ALTER TABLE `" . TABLE_PREFIX ."infernoshoutusers` ADD `s_filters` VARCHAR( 255 ) NOT NULL ;");
+$db->query("ALTER TABLE `" . TABLE_PREFIX ."infernoshoutusers` ADD `s_commands` TEXT NOT NULL ;");
+$db->query("insert into " . TABLE_PREFIX . "infernoshout (s_user, s_time, s_shout) values (1, " . (TIMENOW + 1) . ", 'Ïîçäðàâëÿåì, âû òîëüêî ÷òî îáíîâèëèñü ê Inferno vBShout PRO v2!')");
+$db->reporterror = true;]]></installcode>
+			<uninstallcode><![CDATA[$db->reporterror = false;
+$db->query("DROP TABLE `" . TABLE_PREFIX . "infernoshout`");
+$db->query("DROP TABLE `" . TABLE_PREFIX . "infernoshoutsessions`");
+$db->query("DROP TABLE `" . TABLE_PREFIX . "infernoshoutusers`");
+$db->reporterror = true;]]></uninstallcode>
+		</code>
+		<code version="2.5.0">
+			<installcode><![CDATA[$db->reporterror = false;
+$db->query("
+ CREATE TABLE " . TABLE_PREFIX . "infernoshoutlog (
+`lid` INT( 15 ) NOT NULL AUTO_INCREMENT ,
+`l_time` INT( 15 ) NOT NULL ,
+`l_ip` VARCHAR( 255 ) NOT NULL ,
+`l_message` MEDIUMTEXT NOT NULL ,
+`l_user` INT( 15 ) NOT NULL,
+`l_type` VARCHAR( 255 ) NOT NULL,
+PRIMARY KEY ( `lid` )
+) TYPE = MYISAM;
+");
+$db->query("insert into " . TABLE_PREFIX . "infernoshout (s_user, s_time, s_shout) values (1, " . (TIMENOW + 1) . ", 'Ïîçäðàâëÿåì, âû òîëüêî ÷òî îáíîâèëèñü ê Inferno vBShout PRO v2.5.2!')");
+$db->reporterror = true;]]></installcode>
+			<uninstallcode><![CDATA[$db->reporterror = false;
+$db->query("DROP TABLE `" . TABLE_PREFIX . "infernoshout`");
+$db->query("DROP TABLE `" . TABLE_PREFIX . "infernoshoutsessions`");
+$db->query("DROP TABLE `" . TABLE_PREFIX . "infernoshoutusers`");
+$db->query("DROP TABLE `" . TABLE_PREFIX . "infernoshoutlog`");
+$db->reporterror = true;]]></uninstallcode>
+		</code>
+	</codes>
+	<templates>
+		<template name="inferno_shoutbox_activeusers" templatetype="template" date="1179270437" username="Zero Tolerance" version="1.0 Lite"><![CDATA[<div class="smallfont"><strong>Àêòèâíûå ïîëüçîâàòåëè ÷àòà:</strong> $total
+<div>$activeusers</div>
+</div>]]></template>
+		<template name="inferno_shoutbox_archive" templatetype="template" date="1207174859" username="Zero Tolerance" version="2.0.0"><![CDATA[<if condition="$cansearch">
+<form method="post" action="infernoshout.php">
+<input type="hidden" name="do" value="archive" />
+<input type="hidden" name="search" value="1" />
+</if>
+<table cellpadding="0" cellspacing="$stylevar[cellspacing]" border="0" width="100%" align="center">
+<tr>
+	<td width="70%" align='left' valign='top'>
+		<table class="tborder" cellpadding="$stylevar[cellpadding]" cellspacing="$stylevar[cellspacing]" border="0" width="100%" align="center">
+		<tr>
+			<td class="tcat" align="left">
+				Àðõèâ ×àòà
+			</td>
+		</tr>
+		$shouthtml
+		</table>
+	</td>
+	<td>&nbsp;&nbsp;</td>
+	<td width='30%' align='right' valign='top'>
+		<table class="tborder" cellpadding="$stylevar[cellpadding]" cellspacing="$stylevar[cellspacing]" border="0" width="100%" align="center">
+		<thead>
+		<tr>
+			<td class="tcat" align="left" colspan="2">
+				<a style="float:$stylevar[right]" href="#top" onclick="return toggle_collapse('infernoshout_stats')"><img id="collapseimg_infernoshout_stats" src="$stylevar[imgdir_button]/collapse_tcat$vbcollapse[collapseimg_vbshout_stat].gif" alt="" border="0" /></a>
+				Ñòàòèñòèêà
+			</td>
+		</tr>
+		</thead>
+		<tbody id="collapseobj_infernoshout_stats" style="$vbcollapse[collapseobj_infernoshout_stats]">
+		<tr>
+			<td class="alt1" align="left">
+				<b>Âñåãî ñîîáùåíèé:</b>
+			</td>
+			<td class="alt2" width="1%" align="left">
+				$TS
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" align="left">
+				<b>Ñîîáùåíèé çà ïîñëåäíèå 24 ÷àñà:</b>
+			</td>
+			<td class="alt2" width="1%" align="left">
+				$T4		
+			</td>
+		</tr>
+		<tr>
+			<td class="alt1" align="left">
+				<b>Âàøèõ ñîîáùåíèé:</b>
+			</td>
+			<td class="alt2" width="1%" align="left">
+				$TY
+			</td>
+		</tr>
+		</tbody>
+		<if condition="$cansearch">
+		<tr>
+			<td class="thead" align="left" colspan="2">
+				<a style="float:$stylevar[right]" href="#top" onclick="return toggle_collapse('infernoshout_stats_search')"><img id="collapseimg_infernoshout_stats_search" src="$stylevar[imgdir_button]/collapse_thead$vbcollapse[collapseimg_infernoshout_stats_search].gif" alt="" border="0" /></a>
+				Ïîèñê ñîîáùåíèé
+			</td>
+		</tr>
+		<tbody id="collapseobj_infernoshout_stats_search" style="$vbcollapse[collapseobj_infernoshout_stats_search]">
+		<tr>
+			<td class="alt1" align="left" colspan="2" valign="middle" style="white-space: nowrap;">
+				<fieldset class="fieldset">
+					<legend>Êëþ÷åâûå ñëîâà äëÿ ïîèñêà</legend>
+
+					<table cellpadding="0" cellspacing="4" border="0" width="100%">
+					<tr>
+						<td style="white-space: nowrap;"><b>Ñîäåðæèìîå ñîîáùåíèÿ:</b></td>
+						<td><input type="text" name="search[phrase]" value="{$search['phrase']}" size="25" class="bginput" /></td>
+					</tr>
+					<tr>
+						<td style="white-space: nowrap;"><b>Ïîèñê ïî èìåíàì ïîëüçîâàòåëåé:</b></td>
+						<td><input type="text" name="search[username]" value="{$search['username']}" size="25" class="bginput" /></td>
+					</tr>
+					<tr>
+						<td style="white-space: nowrap;"><b>Â ïðåäåëàõ ïðîøåäøèõ <em>X</em> ÷àñîâ:</b></td>
+						<td><input type="text" name="search[time]" value="<if condition="$search['time']">{$search['time']}<else />10</if>" size="2" class="bginput" /></td>
+					</tr>
+					<tr>
+						<td style="white-space: nowrap;"><b>Ñîðòèðîâàòü ðåçóëüòàòû ïî:</b></td>
+						<td>
+							<span style="float: right"><input type="submit" class="button" value="Èñêàòü" /></span>
+							<select class="bginput" name="search[sort]">
+								<option value="new"<if condition="$search[sort] == 'new'"> selected="selected"</if>>Íîâûå ñíà÷àëà</option>
+								<option value="old"<if condition="$search[sort] == 'old'"> selected="selected"</if>>Ñòàðûå ñíà÷àëà</option>
+							</select>
+						</td>
+					</tr>
+					</table>
+				</fieldset>
+			</td>
+		</tr>
+		</tbody>
+		</if>
+		<tr>
+			<td class="thead" align="left" colspan="2">
+				<a style="float:$stylevar[right]" href="#top" onclick="return toggle_collapse('infernoshout_stats_top10')"><img id="collapseimg_infernoshout_stats_top10" src="$stylevar[imgdir_button]/collapse_thead$vbcollapse[collapseimg_infernoshout_stats_top10].gif" alt="" border="0" /></a>
+				Ëó÷øèå $top_shouter_num ÷àòåðû
+			</td>
+		</tr>
+		<tbody id="collapseobj_infernoshout_stats_top10" style="$vbcollapse[collapseobj_infernoshout_stats_top10]">
+		$TopTen
+		</tbody>
+		</table>
+	</td>
+</tr>
+</table>
+<if condition="$cansearch"></form></if>
+
+$pagenav
+
+<script type="text/javascript" src="infernoshout/browser/infernoshout.js?ver={$vboptions['ishout_jversion']}"></script>
+<script type="text/javascript">
+<!--
+
+/**
+ * Inferno Shoutbox Javascript Engine
+ * Ðàçðàáîòàíî Inferno Technologies
+ * Ìîäèôèöèðîâàíî alex Roosso (http://roosso.net)
+ * * * * * * * * * * * * * * *
+ */
+
+InfernoShoutbox = new _ishout;
+InfernoShoutbox.archive = true;
+-->
+</script>]]></template>
+		<template name="inferno_shoutbox_archive_shout" templatetype="template" date="1207177640" username="Zero Tolerance" version="2.0.0"><![CDATA[<if condition="!$single_only">
+<tbody id="shout_row_{$shout['sid']}">
+<tr>
+	<td class="thead" align="left">
+		<span style='float:right'>$date $time</span>
+		<a href="member.php?{$session['sessionurl']}u={$shout['s_user']}">{$shout['musername']}</a> <if condition="$canmod">(<a href="?" onclick="return InfernoShoutbox.edit_shout('{$shout['sid']}');">Ðåäàêòèðîâàòü</a> &middot; <a href="?" onclick="return confirm('Âû óâåðåíû, ÷òî õîòèòå óäàëèòü ýòî ñîîáùåíèå') ? InfernoShoutbox.archive_edit_shout('{$shout['sid']}', 1) : false;">Óäàëèòü</a>)</if> <if condition="$shout[s_private] > 0"><strong>(Ëè÷íîå ñîîáùåíèå)</strong></if>
+	</td>
+</tr>
+<tr>
+	<td class="alt1" width="1%" align="left" id="shout_shell_{$shout['sid']}">
+</if>
+		<div id="shout_{$shout['sid']}">
+		<if condition="!$shout[s_me]">
+			{$shout['s_shout']}
+		<else />
+			<span class='highlight'>
+				*{$shout['musername']} {$shout['s_shout']}*
+			</span>
+		</if>
+		</div>
+		<div id="shout_edit_{$shout['sid']}" style="display: none;">
+			<input type="text" class="bginput" />
+			<input type="button" class="button" value="Îòìåíèòü" onclick="return InfernoShoutbox.cancel_edit_shout('{$shout['sid']}');" />
+			<input type="button" class="button" value="Îáíîâèòü" onclick="return InfernoShoutbox.archive_edit_shout('{$shout['sid']}');" />
+		</div>
+<if condition="!$single_only">
+	</td>
+</tr>
+</tbody>
+</if>]]></template>
+		<template name="inferno_shoutbox_archive_topshouter" templatetype="template" date="1180474798" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[<tr>
+	<td class="alt1" align="left">
+		<a href="member.php?{$session['sessionurl']}u={$TTS['s_user']}">{$TTS['username']}</a>
+	</td>
+	<td class="alt2" width="1%" align="left">
+		{$TTS['TS']}
+	</td>
+</tr>]]></template>
+		<template name="inferno_shoutbox_box" templatetype="template" date="1207255867" username="Zero Tolerance" version="2.0.0"><![CDATA[<table class="tborder" cellpadding="$stylevar[cellpadding]" cellspacing="$stylevar[cellspacing]" border="0" width="100%" align="center">
+<thead>
+<tr>
+	<td class="tcat" align="center">
+		<a style="float:$stylevar[right]" href="#top" onclick="return toggle_collapse('forumhome_infernoshout')"><img id="collapseimg_forumhome_infernoshout" src="$stylevar[imgdir_button]/collapse_tcat$vbcollapse[collapseimg_infernoshout].gif" alt="" border="0" /></a>
+
+		<if condition="$vboptions[ishout_archive_link]">
+		{$vboptions[ishout_sbtitle]} [<a href="infernoshout.php?{$session['sessionurl']}do=archive" title="Ïîêàçàòü àðõèâ">Àðõèâ</a>]
+		<else />
+		<a href="infernoshout.php?{$session['sessionurl']}do=archive" title="Ïîêàçàòü àðõèâ">{$vboptions[ishout_sbtitle]}</a>
+		</if>
+	</td>
+</tr>
+</thead>
+<tbody id="shoutbox_editshout" style="display: none;">
+	<tr>
+		<td class="alt1" align="left" width="100%">
+			<form onsubmit="return InfernoShoutbox.do_edit_shout();" action="index.php" id="editshoutform">
+				<span style="float: right;">
+					<input type="submit" class="button" value="Îáíîâèòü" />
+					<input type="button" class="button" value="Óäàëèòü" onclick="InfernoShoutbox.do_edit_shout(true);" />
+					<input type="button" class="button" value="Îòìåíàl" onclick="InfernoShoutbox.cancel_edit_shout();" />
+				</span>
+				<input type="text" size="60" class="bginput" name="editshout" />
+				<input type="hidden" name="shoutid" value="" />
+			</form>
+		</td>
+	</tr>
+</tbody>
+<tbody id="shoutbox_smilies" style="display: none;">
+	<tr>
+		<td class="alt1" align="center" width="100%" id="shoutbox_smilies_row">
+		</td>
+	</tr>
+</tbody>
+<tbody id="collapseobj_forumhome_infernoshout" style="$vbcollapse[collapseobj_forumhome_infernoshout]">
+	<tr>
+		<td class="alt1" align="left" width="100%">
+		<if condition="!$vboptions[ishout_editor_position] && $bbuserinfo[userid] > 0">
+			<form onsubmit="return InfernoShoutbox.shout();" action="index.php">
+			{$infernoshout->editor}
+			<div style="height: 4px"></div>
+			</form>
+		</if>
+
+
+		<div class="alt2" style="padding: 0px; margin: 0px; border: 0px !important;">
+				<table width="100%" cellpadding="0" cellspacing="0" id="vbshout_pro_tabs">
+				<tr>
+					<td class="alt1" width="100%" style="padding: 0px; margin: 0px; border: 0px !important;">&nbsp;</td>
+				</tr>
+				</table>
+		</div>
+
+		<div class="alt2" id="shoutbox_notice" style="border: 0px !important; display: none; padding-left: 3px; padding-top: 3px; padding-bottom: 0px; padding-right: 0px;"><b class="highlight">Óâåäîìëåíèå ÷àòà:</b> <span class="smallfont" id="shoutbox_notice_message"></span></div>
+		<div class="alt2" id="shoutbox_window" style="border: 0px !important;"><span id="shoutbox_frame" style="border: 0px !important; display: block; padding: 3px; overflow:auto;height:{$vboptions['ishout_height']}px; width: 99%;">Çàãðóçêà...</span><span id="shoutbox_users_frame" style="display: none; padding: 3px; overflow:auto;height:{$vboptions['ishout_height']}px; width: 99%;">Çàãðóçêà...</span></div>
+
+		<if condition="$vboptions[ishout_editor_position] && $bbuserinfo[userid] > 0">
+			<form onsubmit="return InfernoShoutbox.shout();" action="index.php">
+			<div style="height: 4px"></div>
+			{$infernoshout->editor}
+			</form>
+		</if>
+		</td>
+	</tr>
+</tbody>
+</table>
+<br />
+
+<script type="text/javascript" src="infernoshout/browser/infernoshout.js?ver={$vboptions['ishout_jversion']}"></script>
+<script type="text/javascript">
+<!--
+
+/**
+ * Inferno Shoutbox Javascript Engine
+ * Ðàçðàáîòàíî Inferno Technologies
+ * Ïåðåâîä Traxalo
+ * Ìîäèôèöèðîâàíî alex Roosso (http://roosso.net)
+ * Âñå ïðààâ çàùèùåíû
+ * * * * * * * * * * * * * * *
+ */
+
+InfernoShoutbox = new _ishout;
+<if condition="$_REQUEST['do'] == 'detach'">InfernoShoutbox.detached = true;</if>
+<if condition="$vboptions[ishout_aop]">InfernoShoutbox.aop = true;</if>
+InfernoShoutbox.initiate(
+	'{$infernoshout->script}',
+	'{$infernoshout->vbulletin->options['ishout_idletime']}',
+	'{$infernoshout->editor_settings['s_bold']}',
+	'{$infernoshout->editor_settings['s_italic']}',
+	'{$infernoshout->editor_settings['s_underline']}',
+	'{$infernoshout->vbulletin->options['ishout_shoutorder']}',
+	'{$infernoshout->vbulletin->options['ishout_flood']}',
+	'{$vboptions['ishout_height']}',
+	parseInt("{$vboptions[ishout_ajaxrefresh]}") * 1000
+);
+<if condition="$vboptions[ishout_autoidle]">InfernoShoutbox.idle = true;</if>
+-->
+</script>]]></template>
+		<template name="inferno_shoutbox_commands" templatetype="template" date="1195157711" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[<form action="infernoshout.php" method="post">
+<input type="hidden" name="do" value="options" />
+<input type="hidden" name="area" value="commands" />
+<input type="hidden" name="update" value="1" />
+<table cellpadding="$stylevar[cellpadding]" cellspacing="$stylevar[cellspacing]" border="0" width="100%" align="center" class="tborder">
+<tr>
+	<td class="tcat" colspan="2">Êîìàíäû ÷àòà</td>
+</tr>
+<tr>
+	<td class="thead" colspan="2">Íàñòðîèòü êîìàíäû</td>
+</tr>
+<tr>
+	<td class="alt1" colspan="2">
+		Âû ìîæåòå ñîçäàòü çäåñü íîâûå êîìàíäû, ïðîñòî ââåäèòå êîìàíäó è åå âûâîä, ïðèìåð:
+		<br /><br />
+		<span class="smallfont">
+			<b>Êîìàíäà:</b> /slapuser {input}
+			<br /><b>Âûâîä:</b> /me slaps {input}
+		</span>
+		<br /><br />'<em>{input}</em>' ýòî åêñòðà-ïåðåìåííàÿ êîòîðóþ âû ìîæåòå èñïîëüçîâàòü â ñâîèõ êîìàíäàõ, òàêèì îáðàçîì âûøå óêàçàííûé ïðèìåð ïðîèçâîäèò ñëåäóåùåå â êîìàíäå:
+		<br /><br /><span class="smallfont">/me slaps {$bbuserinfo['username']} (Åñëè âû âûáðàëè: /slapuser {$bbuserinfo['username']})</span>
+	</td>
+</tr>
+<tr>
+	<td class="thead" colspan="2">Óïðàâëåíèå ñóùåñòâóþùèìè êîììàíäàìè</td>
+</tr>
+<if condition="$current_commands">
+$current_commands
+<else />
+<tr>
+	<td colspan="2" class="alt1"><em>Ñåé÷àñ íåò ââåäåíûõ êîìàíä</em></td>
+</tr>
+</if>
+<tr>
+	<td class="thead" colspan="2">Äîáàâèòü íîâûå êîìàíäû</td>
+</tr>
+$new_commands
+<tr>
+	<td class="tfoot" align="center" colspan="2"><input type="submit" value="Ñîõðàíèòü íàñòðîéêè" class="button" /></td>
+</tr>
+</table>]]></template>
+		<template name="inferno_shoutbox_commands_row" templatetype="template" date="1195157977" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[<tr>
+	<td class="alt1" width="50%">
+		<fieldset class="fieldset">
+			<legend>Command Input</legend>
+			<div align="center"><input type="text" size="50" value="$command[input]" class="bginput" name="commands[input][]" /></div>
+		</fieldset>	
+	</td>
+	<td class="alt2" width="50%">
+		<fieldset class="fieldset">
+			<legend>Command Output</legend>
+			<div align="center"><input type="text" size="50" value="$command[output]" class="bginput" name="commands[output][]" /></div>
+		</fieldset>
+	</td>
+</tr>]]></template>
+		<template name="inferno_shoutbox_cp" templatetype="template" date="1195079341" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[<table cellpadding="0" cellspacing="$stylevar[cellspacing]" border="0" width="100%" align="center">
+<tr>
+	<td width="20%" align='left' valign='top'>
+		<table class="tborder" cellpadding="$stylevar[cellpadding]" cellspacing="$stylevar[cellspacing]" border="0" width="100%" align="center">
+		<tr>
+			<td class="tcat" align="left">
+				Ïàíåëü íàñòðîéêè ÷àòà
+			</td>
+		</tr>
+		<tr>
+			<td class="thead" align="left">
+				Ìåíþ
+			</td>
+		</tr>
+		<tr>
+			<td class="alt2" align="left" style="white-space: nowrap;">
+				&raquo; <a href="infernoshout.php?$session[sessionurl]do=options&amp;area=filters">Ôèëüòðû</a>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt2" align="left" style="white-space: nowrap;">
+				&raquo; <a href="infernoshout.php?$session[sessionurl]do=options&amp;area=commands">Êîìàíäû</a>
+			</td>
+		</tr>
+		<tr>
+			<td class="alt2" align="left" style="white-space: nowrap;">
+				&raquo; <a href="infernoshout.php?$session[sessionurl]do=options&amp;area=ignore">Èãíîðèðóåìûå ïîëüçîâàòåëè</a>
+			</td>
+		</tr>
+		</table>
+	</td>
+	<td>&nbsp;&nbsp;</td>
+	<td width='80%' align='left' valign='top'>
+		$SETTING
+	</td>
+</tr>
+</table>]]></template>
+		<template name="inferno_shoutbox_detach" templatetype="template" date="1206410596" username="Zero Tolerance" version="2.0.0"><![CDATA[$stylevar[htmldoctype]
+<html xmlns="http://www.w3.org/1999/xhtml" dir="$stylevar[textdirection]" lang="$stylevar[languagecode]" id="vbulletin_html">
+<head>
+$headinclude
+<title>$vboptions[ishout_sbtitle]</title>
+</head>
+<body>
+$HTML
+</body>
+</html>]]></template>
+		<template name="inferno_shoutbox_editor" templatetype="template" date="1206410761" username="Zero Tolerance" version="2.0.0"><![CDATA[<table width='100%' border='0' cellpadding='0' cellspacing='0'>
+	<tr>
+	<td width='100%'>
+		<input type="text" name="vbshout_pro_shoutbox_editor" style="width: 93%" class="bginput" id="vbshout_pro_shoutbox_editor" />
+	</td>
+	<td style='white-space:nowrap' width='1%'>
+		<input type="button" value="Îòïðàâèòü" class="button" onclick='InfernoShoutbox.shout();' />
+		<if condition="$vboptions['ishout_editor_tools'] & 32"><input type='button' class='button' value='Î÷èñòèòü' onclick='InfernoShoutbox.clear();' /></if>
+		<if condition="$vboptions['ishout_editor_tools'] & 64"><input type='button' class='button' value='Ñìàéëèêè ;)' onclick='InfernoShoutbox.smilies();' /></if>
+		<if condition="$_REQUEST['do'] != 'detach'"><input type="button" value="Îïöèè" class="button" onclick='InfernoShoutbox.goto_options();' /></if>
+		<if condition="($vboptions['ishout_editor_tools'] & 128) && $_REQUEST['do'] != 'detach'"><input type='button' class='button' value='Ðàçâåðíóòü' onclick='InfernoShoutbox.detach();' /></if>
+		<if condition="$vboptions['ishout_editor_tools'] & 1"><input id='sb_mem_bold' type='button' class='button' style='font-weight:bold' value='B' onclick='InfernoShoutbox.assign_styleprop("fontWeight", this);' /></if>
+		<if condition="$vboptions['ishout_editor_tools'] & 2"><input id='sb_mem_underline' type='button' class='button' style='text-decoration:underline' value='U' onclick='InfernoShoutbox.assign_styleprop("textDecoration", this);' /></if>
+		<if condition="$vboptions['ishout_editor_tools'] & 4"><input id='sb_mem_italic' type='button' class='button' style='font-style:italic' value='I' onclick='InfernoShoutbox.assign_styleprop("fontStyle", this);' /></if>
+		<if condition="$vboptions['ishout_editor_tools'] & 8"><select id='sb_color_mem' name='font_color' onchange='InfernoShoutbox.assign_styleprop("color", this);'>{$infernoshout->editor_selects['colours']}</select></if>
+		<if condition="$vboptions['ishout_editor_tools'] & 16"><select id='sb_font_mem' name='font_selector' onchange='InfernoShoutbox.assign_styleprop("fontFamily", this);'>{$infernoshout->editor_selects['fonts']}</select></if>
+	</td>
+</tr>
+</table>]]></template>
+		<template name="inferno_shoutbox_filters" templatetype="template" date="1195155910" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[<form action="infernoshout.php" method="post">
+<input type="hidden" name="do" value="options" />
+<input type="hidden" name="area" value="filters" />
+<input type="hidden" name="update" value="1" />
+<table cellpadding="$stylevar[cellpadding]" cellspacing="$stylevar[cellspacing]" border="0" width="100%" align="center" class="tborder">
+<tr>
+	<td class="tcat" colspan="2">Ôèëüòðû ÷àòà</td>
+</tr>
+<tr>
+	<td class="thead" colspan="2">Âûáåðèòå ÷òî âû õîòèòå îòôèëüòðîâàòü</td>
+</tr>
+<tr>
+	<td class="alt1">Ñêðûòü BB-êîäû:</td>
+	<td class="alt2" width="1%"><input type="checkbox" class="bginput" name="filters[bbcode]" value="1" <if condition="$filters[bbcode]">checked="checked"</if> /></td>
+</tr>
+<tr>
+	<td class="alt1">Ñêðûòü ëè÷íûå ñîîáùåíèÿ:</td>
+	<td class="alt2" width="1%"><input type="checkbox" class="bginput" name="filters[pm]" value="1" <if condition="$filters[pm]">checked="checked"</if> /></td>
+</tr>
+<tr>
+	<td class="alt1">Ñêðûòü '/me' ñîîáùåíèÿ:</td>
+	<td class="alt2" width="1%"><input type="checkbox" class="bginput" name="filters[me]" value="1" <if condition="$filters[me]">checked="checked"</if> /></td>
+</tr>
+<tr>
+	<td class="tfoot" align="center" colspan="2"><input type="submit" value="Ñîõðàíèòü íàñòðîéêè" class="button" /></td>
+</tr>
+</table>]]></template>
+		<template name="inferno_shoutbox_ignore" templatetype="template" date="1195081449" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[<form action="infernoshout.php" method="post">
+<input type="hidden" name="do" value="options" />
+<input type="hidden" name="area" value="ignore" />
+<input type="hidden" name="update" value="1" />
+<table cellpadding="$stylevar[cellpadding]" cellspacing="$stylevar[cellspacing]" border="0" width="100%" align="center" class="tborder">
+<tr>
+	<td class="tcat" colspan="2">Èãíîðèðóåìûå ïîëüçîâàòåëè</td>
+</tr>
+<tr>
+	<td class="thead" colspan="2">Áûñòðàÿ íàñòðîéêà èãíîðèðîâàíèÿ</td>
+</tr>
+<tr>
+	<td class="alt1" colspan="2">Êðîìå òîãî, åñëè âû èñïîëüçóåòå ïàíåëü óïðàâëåíèÿ, âû ìîæåòå âûïîëíÿòü ñëåäóþùèå êîìàíäû, äëÿ áûñòðîãî îáíîâëåíèÿ âàøèõ íàñòðîåê èãíîðèðîâàíèÿ(â ïðåäåëàõ ÷àòà ):<br /><br />
+	<span class="smallfont">
+		/ignore $bbuserinfo[username]<br />
+		/unignore $bbuserinfo[username]
+	</span>
+	</td>
+</tr>
+<tr>
+	<td class="thead" colspan="2">Óïðàâëåíèå (ñåé÷àñ) èãíîðèðóåìûõ ïîëüçîâàòåëåé</td>
+</tr>
+	<if condition="$already_ignored">
+	$already_ignored
+	<else />
+<tr>
+	<td class="alt1" colspan="2"><em>Ñåé÷àñ âû íå èãíîðèðóåòå ïîëüçîâàòåëåé ÷àòà.</em></td>
+</tr>
+	</if>
+<tr>
+	<td class="thead" colspan="2">Äîáàâèòü íîâîãî èãíîðèðóåìîãî ïîëüçîâàòåëÿ</td>
+</tr>
+$new_ignore
+<tr>
+	<td class="tfoot" align="center" colspan="2"><input type="submit" value="Ñîõðàíèòü íàñòðîéêè" class="button" /></td>
+</tr>
+</table>]]></template>
+		<template name="inferno_shoutbox_ignore_user" templatetype="template" date="1195079461" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[<tr>
+	<td class="alt1">Ââåäèòå ïîëüçîâàòåëÿ, êîòîðîãî âû õîòèòå èãíîðèðîâàòü:</td>
+	<td class="alt2" width="1%"><input type="text" class="bginput" name="ignore[]" value="$ignore[username]" /></td>
+</tr>]]></template>
+		<template name="inferno_shoutbox_shout" templatetype="template" date="1206323394" username="Zero Tolerance" version="2.0.0"><![CDATA[<if condition="!$shout[s_me]">
+<div style="padding-top: 1px; padding-bottom: 1px;<if condition="$shout[s_notice]">padding-bottom: 6px;</if>" class="smallfont"<if condition="$canmod"> ondblclick="return InfernoShoutbox.edit_shout($shout[sid]);"</if>><if condition="!$shout[s_notice]">[<span class="time" style="font-size: 9px;font-family: Tahoma;" title="$time">$date</span>] </if><if condition="$shout[s_private] > 0 && !$ispmwindow">[<a href="#" onClick="return InfernoShoutbox.open_pm_tab('pm_{$shout['userid']}', '$shout[javascript_name]', '{$shout['userid']}');"><strong>Ëè÷íî</strong></a> îò</if><if condition="!$shout[s_notice]"><if condition="!$vboptions[ishout_disable_pm]"><if condition="$shout[s_private] <= 0 && !$ispmwindow"><a href="javascript:InfernoShoutbox.append_smilie('/pm $shout[s_user]'+'; $shout[javascript_name]'+', ');">»</a></if> <if condition="$shout[s_private] > 0 && !$ispmwindow"><a href="javascript:InfernoShoutbox.append_smilie('/pm $shout[s_user]'+'; $shout[javascript_name]'+', ');"<else /><a href="javascript:InfernoShoutbox.append_smilie('$shout[javascript_name]'+',');"</if><else /><a href="member.php?$session[sessionurl]u=$shout[s_user]"</if>></if>$shout[musername]<if condition="$shout[s_private] > 0 && !$ispmwindow">]</if><if condition="!$shout[s_notice]"></a></if>: $shout[s_shout]</div>
+<else />
+<div style="padding-top: 1px; padding-bottom: 1px;" class="smallfont"<if condition="$canmod"> ondblclick="return InfernoShoutbox.edit_shout($shout[sid]);"</if>>*$shout[musername] $shout[s_shout]*</div>
+</if>]]></template>
+		<template name="inferno_shoutbox_user" templatetype="template" date="1179270159" username="Zero Tolerance" version="1.0 Lite"><![CDATA[<a href="member.php?$session[sessionurl]u=$user[userid]">$user[musername]</a>]]></template>
+	</templates>
+	<plugins>
+		<plugin active="1" executionorder="5">
+			<title>Inferno Shoutbox: Êîìàíäû àäìèíèñòðàòîðîâ</title>
+			<hookname>admin_options_print</hookname>
+			<phpcode><![CDATA[if (!function_exists('fetch_all_usergroups'))
+{
+	function fetch_all_usergroups()
+	{
+		global $vbulletin;
+
+		if (is_array($vbulletin->ugs))
+		{
+			return $vbulletin->ugs;
+		}
+
+		$ugs = array();
+
+		$usergroups = $vbulletin->db->query('select usergroupid, title from ' . TABLE_PREFIX . 'usergroup order by `title`');
+		while ($usergroup = $vbulletin->db->fetch_array($usergroups))
+		{
+			$ugs[$usergroup['usergroupid']] = $usergroup['title'];
+		}
+
+		$vbulletin->ugs = $ugs;
+
+		return $vbulletin->ugs;
+	}
+}
+
+if (in_array($setting['optioncode'], array('default---infernoshout---usergroups', 'default---infernoshout---usergroups---hidden', 'default---infernoshout---usergroups---protected', 'default---infernoshout---usergroups---bannedug', 'default---infernoshout---usergroups---archiveperm', 'default---infernoshout---usergroups---archivesearchperm')))
+{
+	$options = fetch_all_usergroups();
+
+	$allowed = explode(',', $setting['value']);
+
+	if (!is_array($allowed))
+	{
+		$allowed = array();
+	}
+
+	$setting['html'] = "<div id=\"ctrl_setting[$setting[varname]]\" class=\"smallfont\">\r\n";
+	$setting['html'] .= "<input type=\"hidden\" name=\"setting[$setting[varname]][0]\" value=\"0\" />\r\n";
+
+	foreach ($options AS $key => $value)
+	{
+		$value = str_replace('(COPPA) ', '', $value);
+		$setting['html'] .= "<table style=\"width:200px; float:$stylevar[left]\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr valign=\"top\">
+		<td><input type=\"checkbox\" name=\"setting[$setting[varname]][$key]\" id=\"setting[$setting[varname]]_$key\" value=\"1\"" . ((in_array($key, $allowed)) ? ' checked="checked"' : '') . " /></td>
+		<td width=\"100%\" style=\"padding-top:4px\"><label title=\"$value\" for=\"setting[$setting[varname]]_$key\" class=\"smallfont\" style=\"white-space: nowrap;\">$value</label></td>\r\n</tr></table>\r\n";
+	}
+
+	print_label_row($description, $setting['html'], '', 'top', $name, 40);
+
+	$handled = true;
+}
+
+$xml_opts = array(
+	'default---infernoshout---editortools' => array(
+		1	=> 'Æèðíûé',
+		2	=> 'Ïîä÷åðêíóòûé',
+		4	=> 'Êóðñèâ',
+		8	=> 'Öâåòà',
+		16	=> 'Øðèôòû',
+		32	=> 'Î÷èñòèòü',
+		64	=> 'Ñìàéëèêè :)',
+		128	=> 'Îòêëþ÷èòü',
+	),
+	'default---infernoshout---bbcodes' => array(
+		1	=> 'Ðàçðåøèòü  áàçîâûå BB-êîäû',
+		2	=> 'Ðàçðåøèòü  öâåòîâûå BB-êîäû',
+		4	=> 'Ðàçðåøèòü  ðàçìåðíûå BB-êîäû',
+		8	=> 'Ðàçðåøèòü  øðèôòîâûå BB-êîäû',
+		16	=> 'Ðàçðåøèòü  âûðàâíèâàþùèå BB-êîäû',
+		32	=> 'Ðàçðåøèòü  ñïècî÷íûå BB-êîäû',
+		64	=> 'Ðàçðåøèòü  ãèïåðññûëêîâûå BB-êîäû',
+		128	=> 'Ðàçðåøèòü  êîäîâûé(Code) BB-êîäû',
+		256	=> 'Ðàçðåøèòü  PHP BB-êîäû',
+		512	=> 'Ðàçðåøèòü  HTML BB-êîäû',
+	),
+);
+
+if (in_array($setting['optioncode'], array_keys($xml_opts)))
+{
+	$options =& $xml_opts[$setting['optioncode']];
+
+	$allowed = $setting['value'];
+
+	$setting['html'] = "<div id=\"ctrl_setting[$setting[varname]]\" class=\"smallfont\">\r\n";
+	$setting['html'] .= "<input type=\"hidden\" name=\"setting[$setting[varname]][0]\" value=\"0\" />\r\n";
+
+	foreach ($options AS $key => $value)
+	{
+		$value = str_replace('(COPPA) ', '', $value);
+		$setting['html'] .= "<table style=\"width:200px; float:$stylevar[left]\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr valign=\"top\">
+		<td><input type=\"checkbox\" name=\"setting[$setting[varname]][$key]\" id=\"setting[$setting[varname]]_$key\" value=\"$key\"" . (($allowed & $key) ? ' checked="checked"' : '') . " /></td>
+		<td width=\"100%\" style=\"padding-top:4px\"><label title=\"$value\" for=\"setting[$setting[varname]]_$key\" class=\"smallfont\" style=\"white-space: nowrap;\">$value</label></td>\r\n</tr></table>\r\n";
+	}
+
+	print_label_row($description, $setting['html'], '', 'top', $name, 40);
+
+	$handled = true;
+}]]></phpcode>
+		</plugin>
+		<plugin active="1" executionorder="5">
+			<title>Inferno Shoutbox: Admin Usergroup Commands Save</title>
+			<hookname>admin_options_processing</hookname>
+			<phpcode><![CDATA[if (in_array($oldsetting['varname'], array('ishout_admincommands', 'ishout_hideshoutbox', 'ishout_protectedugs', 'ishout_bannedgroups', 'ishout_archiveperm', 'ishout_archive_search')))
+{
+	$allowed = array();
+
+	if (is_array($vbulletin->GPC['setting'][$oldsetting['varname']]))
+	{
+		foreach ($vbulletin->GPC['setting'][$oldsetting['varname']] as $ug => $isallowed)
+		{
+			if ($isallowed)
+			{
+				$allowed[] = $ug;
+			}
+		}
+	}
+
+	$vbulletin->GPC['setting'][$oldsetting['varname']] = implode(',', $allowed);
+
+	if ($settings[$oldsetting['varname']])
+	{
+		$settings[$oldsetting['varname']] = $vbulletin->GPC['setting'][$oldsetting['varname']];
+	}
+}
+
+if (in_array($oldsetting['varname'], array('ishout_editor_tools', 'ishout_bbcodes')))
+{
+	$value = 0;
+
+	if (is_array($vbulletin->GPC['setting'][$oldsetting['varname']]))
+	{
+		foreach ($vbulletin->GPC['setting'][$oldsetting['varname']] as $thisvalue)
+		{
+			$value += $thisvalue;
+		}
+	}
+
+	$vbulletin->GPC['setting'][$oldsetting['varname']] = $value;
+
+	if ($settings[$oldsetting['varname']])
+	{
+		$settings[$oldsetting['varname']] = $vbulletin->GPC['setting'][$oldsetting['varname']];
+	}
+}
+
+if ($oldsetting['varname'] == 'ishout_aop')
+{
+	if ($vbulletin->GPC['setting'][$oldsetting['varname']] && !is_writable(DIR . '/infernoshout/aop/aop.php'))
+	{
+		print_cp_message('
+			Âû àêòèâèðîâàëè íàñòðîéêè "Shoutbox AOP", òåì íå ìåíåå ñèñòåìà â äàíîå âðåìÿ íå â ñîñòîÿíèè çàïèñàòü ñëåäóþùèé ôàéë:
+			<pre>./infernoshout/aop/aop.txt</pre>
+			Ïðîñüáà ïðîâåðèòü, ÷òî äàíûé ôàéë èìååò CHMOD-ïðàâà 0666 (åñëè ýòî íå ðàáîòàåò, ïîïðîáóéòå 0777).
+		');
+	}
+}]]></phpcode>
+		</plugin>
+		<plugin active="1" executionorder="5">
+			<title>Inferno Shoutbox: Initiate Engine</title>
+			<hookname>cache_templates</hookname>
+			<phpcode><![CDATA[require_once(DIR . '/infernoshout/engine/inferno_engine.php');
+$infernoshout->load_engine('initiate');]]></phpcode>
+		</plugin>
+		<plugin active="1" executionorder="5">
+			<title>Inferno Shoutbox: Deploy Shoutbox</title>
+			<hookname>global_complete</hookname>
+			<phpcode><![CDATA[require_once(DIR . '/infernoshout/engine/inferno_deploy.php');]]></phpcode>
+		</plugin>
+		<plugin active="1" executionorder="5">
+			<title>Inferno Shoutbox: Load Shoutbox</title>
+			<hookname>global_start</hookname>
+			<phpcode><![CDATA[require_once(DIR . '/infernoshout/engine/inferno_load.php');]]></phpcode>
+		</plugin>
+		<plugin active="1" executionorder="5">
+			<title>Inferno Shoutbox: User Replies To Thread</title>
+			<hookname>postdata_postsave</hookname>
+			<phpcode><![CDATA[$exempt = explode(',', str_replace(' ', '', $this->registry->options['ishout_threadnotice']));
+$stopnotice = false;
+
+if (is_array($exempt))
+{
+	if (in_array($this->info['forum']['forumid'], $exempt) || $this->registry->options['ishout_postnoticedisable'])
+	{
+		$stopnotice = true;
+	}
+}
+
+if (!$stopnotice && THIS_SCRIPT == 'newreply')
+{
+	global $infernoshout;
+
+	require_once(DIR . '/infernoshout/engine/inferno_engine.php');
+	$infernoshout->load_engine('shout');
+
+	$titleprefix = '';
+	$titlesuffix = '';
+
+	if ($infernoshout->vbulletin->options['ishout_bbcodes'] & 64)
+	{
+		$titleprefix = '[post=' . intval($this->fetch_field('postid')) . ']';
+		$titlesuffix = '[/post]';
+	}
+
+	$shout =& new shout;
+	$shout->silent = true;
+	$shout->process('/me îòâåòèë(à) â òåìå ' . $titleprefix . unhtmlspecialchars($this->info['thread']['title']) . $titlesuffix);
+}
+
+if ($this->registry->options['ishout_postmarker'] > 0)
+{
+	global $infernoshout;
+
+	require_once(DIR . '/infernoshout/engine/inferno_engine.php');
+	$infernoshout->load_engine('shout');
+
+	$division = @(($this->registry->userinfo['posts'] + 1) / $this->registry->options['ishout_postmarker']);
+
+	if ($division === intval($division))
+	{
+		$shout =& new shout;
+		$shout->silent = true;
+		$shout->process('/me äîñòèã(ëà) ' . ($this->registry->userinfo['posts'] + 1) . ' posts!');
+	}
+}]]></phpcode>
+		</plugin>
+		<plugin active="1" executionorder="5">
+			<title>Inferno Shoutbox: User Posted New Thread</title>
+			<hookname>threadfpdata_postsave</hookname>
+			<phpcode><![CDATA[$exempt = explode(',', str_replace(' ', '', $this->registry->options['ishout_threadnotice']));
+$stopnotice = false;
+
+if (is_array($exempt))
+{
+	if (in_array($this->info['forum']['forumid'], $exempt) || $this->registry->options['ishout_postnoticedisable'])
+	{
+		$stopnotice = true;
+	}
+}
+
+if (!$stopnotice)
+{
+	global $infernoshout;
+
+	require_once(DIR . '/infernoshout/engine/inferno_engine.php');
+	$infernoshout->load_engine('shout');
+
+	$titleprefix = '';
+	$titlesuffix = '';
+
+	if ($infernoshout->vbulletin->options['ishout_bbcodes'] & 64)
+	{
+		$titleprefix = '[thread=' . $threadid . ']';
+		$titlesuffix = '[/thread]';
+	}
+
+	$shout =& new shout;
+	$shout->silent = true;
+	$shout->process('/me ñîçäàë òåìó ' . $titleprefix . unhtmlspecialchars($this->thread['title']) . $titlesuffix);
+}
+
+if ($this->registry->options['ishout_postmarker'] > 0)
+{
+	global $infernoshout;
+
+	require_once(DIR . '/infernoshout/engine/inferno_engine.php');
+	$infernoshout->load_engine('shout');
+
+	$division = @(($this->registry->userinfo['posts'] + 1) / $this->registry->options['ishout_postmarker']);
+
+	if ($division === intval($division))
+	{
+		$shout =& new shout;
+		$shout->silent = true;
+		$shout->process('/me äîñòèã ' . ($this->registry->userinfo['posts'] + 1) . ' ïîñòîâ -àãà-!');
+	}
+}]]></phpcode>
+		</plugin>
+	</plugins>
+	<phrases>
+		<phrasetype name="Permissions" fieldname="cppermission">
+			<phrase name="tool_bold" date="1168986169" username="Zero Tolerance" version="1.0"><![CDATA[Æèðíûé]]></phrase>
+			<phrase name="tool_clear" date="1168986251" username="Zero Tolerance" version="1.0"><![CDATA[Î÷èñòèòü]]></phrase>
+			<phrase name="tool_color" date="1168986233" username="Zero Tolerance" version="1.0"><![CDATA[Öâåòà]]></phrase>
+			<phrase name="tool_font" date="1168986242" username="Zero Tolerance" version="1.0"><![CDATA[Øðèôòû]]></phrase>
+			<phrase name="tool_italic" date="1168986184" username="Zero Tolerance" version="1.0"><![CDATA[Êóðñèâ]]></phrase>
+			<phrase name="tool_underline" date="1168986197" username="Zero Tolerance" version="1.0"><![CDATA[Ïîä÷åðêíóòûé]]></phrase>
+		</phrasetype>
+		<phrasetype name="vBulletin Settings" fieldname="vbsettings">
+			<phrase name="setting_ishout_admincommands_desc" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Ïîæàëóéñòà âûáåðèòå ãðóïû ïîëüçîâàòåëåé êîòîðûì ðàçðåøåíî èñïîëüçîâàòü êîìàíäû àäìèíèñòðàòîðîâ. Êîìàíäû àäìèíèñòðàòîðîâ:<br /><pre>/prune
+/ban userid or username (/áàí - íîìåð ïîëüçîâàòåëÿ èëè èìÿ ïîëüçîâàòåëÿ)
+/unban userid or username (/ñíÿòü áàí - íîìåð ïîëüçîâàòåëÿ èëè èìÿ ïîëüçîâàòåëÿ)
+/notice Notice message here (/óâåäîìëåíèå - çäåñü ñîîáùåíèå óâåäîìëåíèÿ)
+/removenotice (/óáðàòü óâåäîìëåíèå)</pre>]]></phrase>
+			<phrase name="setting_ishout_admincommands_title" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Êîìàíäû àäìèíèñòðàòîðà]]></phrase>
+			<phrase name="setting_ishout_ajaxrefresh_desc" date="1194196461" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[Ââåäèòå êîëè÷åñòâî ñåêóíä, ïðåæäå ÷åì ÷àò îáíîâèòñÿ]]
+<br /><br />
+Êîãäà ïîëüçîâàòåëü íå îæèäàåò â ïðåäåëàõ ÷àòà, AJAX äèíàìè÷åñêè îáíîâëÿåò ÷àò äëÿ âûâîäà íîâûõ ñîîáùåíèé.
+<br /><br />
+Äëÿ ïîëó÷åíèÿ ëó÷øèõ ðåçóëüòàòîâ, ìû ðåêîìåíäóåì ïðîâåñòè òåñò íîâûõ íàñòðîåê çäåñü, íàæèìàÿ âðåìÿ-îò-âðåìåíè â ìàëåíüêîì êîëè÷åñòâå (ðåêîìåíäîâàíî: 1 ñåêóíäà) è ïîñìîòðåòü êàê ýòî âëèÿåò íà íàãðóçêó ñåðâåðà.load.]]></phrase>
+			<phrase name="setting_ishout_ajaxrefresh_title" date="1194196461" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[Âðåìÿ îáíîâëåíèÿ AJAX ]]></phrase>
+			<phrase name="setting_ishout_aop_desc" date="1209789637" username="Zero Tolerance" version="2.5.0"><![CDATA[AOP ("Advanced Optimisation Protocol") ýòî íîâàÿ îñîáåííîñòü ñóùåñòâåííî óìåíüøèòü ðåñóðñû, ïîãëîùàåìûå ÷àòîì, è êîòîðîå èäåàëüíî äëÿ ìàëåíüêèõ ñåðâåðîâ, èëè ñàéòîâ, êîòîðûå õîòÿò îïòèìèçèðîâàòü ÷àò.
+<br /><br />
+Èçìåíÿÿ  ýòè ñâîéñòâà ãàðàíòèðóåò, ÷òî ÷àò òîëüêî çàïðàøèâàåò äàííûå, êîãäà òàì - íîâûå äàííûå, êîòîðûå ïðèâëå÷åíû, ýòî îçíà÷àåò ïîñòîÿííî îáíîâëÿåòñÿ, ÷òîáû ïîñìîòðåòü, åñëè òàì - íîâûå äàííûå, ÷àò òîëüêî îáíîâëÿåòñÿ, êîãäà òàì ôàêòè÷åñêè - íîâûå äàííûå. Îäíàêî, èçìåíÿÿ ýòó îïöèþ, âîçìîæíî, ñîçäàåò ïîëîâèíó èëè îäíó âòîðóþ çàäåðæêè â ïîêàçå íîâûõ ñîîáùåíèé â ÷àòå.
+<br /><br />
+Äëÿ ðàáîòû äàíîé îïöèè, ôàéë './infernoshout/aop/aop.txt' äîëæåí áûòü ÷èòàáåëåí, ýòî ìîæåò áûòü ñäåëàíî ÷åðåç FTP. Íóæíî óñòàíîâèòü CHMOD ôàéëà ê 0666..]]></phrase>
+			<phrase name="setting_ishout_aop_title" date="1207178500" username="Zero Tolerance" version="2.0.0"><![CDATA[Shoutbox AOP (Advanced Optimisation Protocol)]]></phrase>
+			<phrase name="setting_ishout_archive_link_desc" date="1206322807" username="Zero Tolerance" version="2.0.0"><![CDATA[Ïî óìîë÷àíèþ, çàãîëîâîê ÷àòà - ññûëêà íà àðõèâ. Òåì-íå-ìåíåå, åñëè âû õîòèòå, âû ìîæåòå íàñòðîèòü ýòó îïöèþ è óäàëèòü ññûëêó ñ çàãîëîêà è äîáàâèòü ññûëêó '[Àðõèâ]' ïîñëå çàãîëîâêà ÷àòà.]]></phrase>
+			<phrase name="setting_ishout_archive_link_title" date="1206322807" username="Zero Tolerance" version="2.0.0"><![CDATA[Àëüòåðíàòèâíàÿ ññûëêà íà àðõèâ ÷àòà]]></phrase>
+			<phrase name="setting_ishout_archive_search_desc" date="1206322321" username="Zero Tolerance" version="2.0.0"><![CDATA[Âû ìîæåòå ïðîâåðèòü êàêèå ãðóïïû ïîëüçîâàòåëåé èìåþò ðàçðåøåíèå ïîèñêà ïî àðõèâó, èìåéòå ââèäó, ÷òî ãðóïïà ïîëüçîâàòåëÿ òàêæå áóäåò òðåáîâàòü äîñòóï ê ïðîñìîòðó àðõèâà è  áûòü â ñîñòîÿíèè èñêàòü.]]></phrase>
+			<phrase name="setting_ishout_archive_search_title" date="1206322321" username="Zero Tolerance" version="2.0.0"><![CDATA[Ïðàâà ïîèñêà â àðõèâå]]></phrase>
+			<phrase name="setting_ishout_archiveperm_desc" date="1195182240" username="Zero Tolerance" version="2.0.0"><![CDATA[Âûáåðèòå ãðóïïû ïîëüçîâàòåëåé, êîòîðûå áóäóò èìåòü äîñòóï ê ïðîñìîòðó àðõèâà ÷àòà.]]></phrase>
+			<phrase name="setting_ishout_archiveperm_title" date="1195182240" username="Zero Tolerance" version="2.0.0"><![CDATA[Ïðàâà ïðîñìîòðà àðõèâà.]]></phrase>
+			<phrase name="setting_ishout_autodelete_desc" date="1194988529" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[Åñëè âû õîòèòå, âû ìîæåòå îïðåäåëèòü àâòîóäàëåíèå ñîîáùåíèé êîòîðûå ñòàðøå ÷åì X ñåêóíä.
+<br /><br />
+Ââåäèòå äèàïàçîí ñóùåñòâîâàíèÿ ñîîáùåíèÿ â ñåêóíäàõ (1800 = 30 ìèíóò).
+<br /><br />
+If you do not wish to auto delete shouts, enter 0 for this setting.]]></phrase>
+			<phrase name="setting_ishout_autodelete_title" date="1194988529" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[Auto Delete Shouts]]></phrase>
+			<phrase name="setting_ishout_autoidle_desc" date="1194196469" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[The shoutbox auto-idle system is useful for large forums with heavy activity, or those who experience load issues. With this activated, the shoutbox will load once on your specified pages, then instantly become idle saving further resources from being used.
+<br /><br />
+Èñïîëüçóÿ ýòî, áóäåò ïîäðàçóìåâàòü òîëüêî ïîëüçîâàòåëåé, êîòîðûå ðåøàò ñâÿçàòüñÿ ñ shoutbox áóäóò èñïîëüçîâàòü ðåñóðñû ôîðóìà, îñòàëüíûå ïîëüçîâàòåëè òîëüêî, ïðîñìàòðèâàÿ ñòðàíèöû, ãäå shoutbox íå èñïîëüçîâàëè, íå áóäóò èìåòü ñâÿçü ñ ðåñóðñàìè ôîðóìà.]]></phrase>
+			<phrase name="setting_ishout_autoidle_title" date="1194196469" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[Àâòî-îæèäàíèå]]></phrase>
+			<phrase name="setting_ishout_banned_desc" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Âû ìîæåòå ââåñòè ID çàáàíåíûõ ïîëüçîâàòåëåé çäåñü, ðàçäåëÿÿ èõ çàïÿòûìè. Êðîìå òîãî, âû ìîæåòå èñïîëüçîâàòü ñëåäóþùèå êîììàíäû â ÷àòå:<br />
+<br />
+<pre>/ban userid or username
+/unban userid or username</pre>]]></phrase>
+			<phrase name="setting_ishout_banned_title" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Çàáàíåíûå ïîëüçîâàòåëè]]></phrase>
+			<phrase name="setting_ishout_bannedgroups_desc" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Âûáåðèòå ãðóïïû ïîëüçîâàòåëåé, êîòîðûå çàáàíåíû â ÷àòå.]]></phrase>
+			<phrase name="setting_ishout_bannedgroups_title" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Çàáàíåíûå ãðóïïû ïîëüçîâàòåëåé]]></phrase>
+			<phrase name="setting_ishout_bbcodes_desc" date="1180556331" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[Îïðåäèëèòå, êàêèì BB-êîäàì ðàçðåøåíî áûòü èñïîëüçîâàíûì â ÷àòå.]]></phrase>
+			<phrase name="setting_ishout_bbcodes_title" date="1180556331" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[×àòîâîå BBCode-ïîñîáèå]]></phrase>
+			<phrase name="setting_ishout_colours_desc" date="1195001505" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[Âû ìîæåòå íàñòðîèòü öâåòà, àâòîìàòè÷åñêè ïîêàçàííûå â ÷àòîâîì ðåäàêòîðå äëÿ ëþäåé, ÷òîáû âûáðàòü ñîîáùåíèÿ. Ïîìåñòèòå îäèí öâåò â êàæäóþ ëèíèþ è óäîñòîâåðüòåñü, ÷òî Âû èñïîëüçóåòå òîëüêî hex-êîä èëè öâåòîâûå íàçâàíèÿ.]]></phrase>
+			<phrase name="setting_ishout_colours_title" date="1195001505" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[Ðåäàêòîð öâåòîâ]]></phrase>
+			<phrase name="setting_ishout_disable_acom_desc" date="1207172347" username="Zero Tolerance" version="2.0.0"><![CDATA[Ïåðåêëþ÷åíèå ýòîé îïöèè íà "Äà" çíà÷èò, ÷òî êîãäà àäìèíèñòðàòîð âûïîëíÿåò êîìàíäó â ÷àòå, óâåäîìëåíèå, êîòîðîå îáû÷íî àâòîìàòè÷åñêè ïîêàçûâàåòñÿ, íå áóäåò ïîêàçàíûì.]]></phrase>
+			<phrase name="setting_ishout_disable_acom_title" date="1207172347" username="Zero Tolerance" version="2.0.0"><![CDATA[Âûêëþ÷èòü êîìàíäíûå óâåäîìëåíèÿ àäìèíèñòðàòîðà]]></phrase>
+			<phrase name="setting_ishout_disable_pm_desc" date="1206411370" username="Zero Tolerance" version="2.0.0"><![CDATA[×àò èìååò ñïîñîáíîñòü ïîñûëàòü ëè÷íûå ñîîáùåíèÿ ìåæäó ïîëüçîâàòåëÿìè. Íàæàòèå íà èìÿ ïîëüçîâàòåëÿ îòêðîåò íîâóþ ÷àòîâóþ âêëàäêó, â êîòîðîé ñîîáùåíèÿ áóäóò âèäíû òîëüêî ìåæäó îòïðàâèòåëåì è ïîëó÷àòåëåì. Ëþäè ìîãóò èñïîëüçîâàòü ËÑ êîìàíäîé:
+<pre>/pm [username]; [message]</pre>([èìÿ ïîëüçîâàòåëÿ]; [ñîîáùåíèå])
+Åñëè âû õîòèòå âûêëþ÷èòü ýòó îïöèþ, ïåðåêëþ÷èòå ýòî íà "Äà".]]></phrase>
+			<phrase name="setting_ishout_disable_pm_title" date="1206411370" username="Zero Tolerance" version="2.0.0"><![CDATA[Îòêëþ÷åíèå ËÑ]]></phrase>
+			<phrase name="setting_ishout_editor_position_desc" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Âûáðàòü ïîçèöèþ ðåäàêòîðà ÷àòà.]]></phrase>
+			<phrase name="setting_ishout_editor_position_title" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Ïîçèöèÿ ðåäàêòîðà]]></phrase>
+			<phrase name="setting_ishout_editor_tools_desc" date="1180556341" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[Âûáåðèòå, êàêèå èíñòðóìåíòû áóäóò ïîêàçàíû â ïðåäåëàõ ðåäàêòîðà ÷àòà.]]></phrase>
+			<phrase name="setting_ishout_editor_tools_title" date="1180556341" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[Èíñòðóìåíòû ðåäàêòîðà]]></phrase>
+			<phrase name="setting_ishout_flood_desc" date="1206411379" username="Zero Tolerance" version="2.0.0"><![CDATA[Óñòàíîâèòå ñêîëüêî ñåêóíä ïîëüçîâàòåëü äîëæåí îæèäàòü ïåðåä íàïèñàíèåì äðóãîãî ñîîáùåíèÿ ïîñëå ïðåäûäóùåãî.]]></phrase>
+			<phrase name="setting_ishout_flood_title" date="1206411379" username="Zero Tolerance" version="2.0.0"><![CDATA[Êîíòðîëü "ôëóäà"]]></phrase>
+			<phrase name="setting_ishout_fonts_desc" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Ïîäîáíûé "Ðåäàêòîðó öâåòîâ", òîëüêî îòíîñèòñÿ ê ñòèëþ øðèôòà.]]></phrase>
+			<phrase name="setting_ishout_fonts_title" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Ðåäàêòîð Øðèôòîâ]]></phrase>
+			<phrase name="setting_ishout_globaldeploy_desc" date="1195001409" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[Óñòàíîâêà ïåðåêëþ÷àòåëÿ íà "Äà" âûçîâåò ðàçìåùåíèÿ ÷àòà íà âñåõ ñòðàíèöàõ vBulletin, òåì-íå-ìåíåå ÷àò áóäåò ïîêàçàí, åñëè êîä øàáëîíà áûë äîáàâëåí â øàáëîíó íà äàííîé ñòðàíèöå. Ñàìûé áûñòðûé ñïîñîá áóäåò îòðåäàêòèðîâàòü øàáëîí 'navbar' è ÷àò áóäåò ïîêàçàí ïî âñåì ñòðàíèöàì ôîðóìà. (Îòðåäàêòèðóéòå øàáëîí 'footer', ÷òîáû ÷àò áûë ïîêàçàí ñíèçó ñòðàíèöû.]]></phrase>
+			<phrase name="setting_ishout_globaldeploy_title" date="1195001409" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[Ãëîáàëüíûé ñòðàíè÷íûé ïîêàç ÷àòà.]]></phrase>
+			<phrase name="setting_ishout_height_desc" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Îïðåäåëèòå ÷èñëî â ïèêñåëÿõ äëÿ óñòàíîâêè âûñîòû îêíà, ãäå áóäóò îòîáðàæàòñÿ ñîîáùåíèÿ ïî-óìîë÷àíèþ . Âàì íå òðåáóåòñÿ ââîäèòü 'px'.]]></phrase>
+			<phrase name="setting_ishout_height_detach_desc" date="1206412550" username="Zero Tolerance" version="2.0.0"><![CDATA[Îïðåäåëèòå ÷èñëî â ïèêñåëÿõ äëÿ óñòàíîâêè âûñîòû îêíà ãäå ñîîáùåíèÿ áóäóò ïîêàçàíû <b>êîãäà îòêëþ÷åíû</b>. YÂàì íå òðåáóåòñÿ ââîäèòü 'px'.]]></phrase>
+			<phrase name="setting_ishout_height_detach_title" date="1206412550" username="Zero Tolerance" version="2.0.0"><![CDATA[Âûñîòà îêíà îòêëþ÷åííûõ ñîîáùåíèé.]]></phrase>
+			<phrase name="setting_ishout_height_title" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Âûñîòà îêíà ñîîáùåíèé ïî-óìîë÷àíèþ.]]></phrase>
+			<phrase name="setting_ishout_hideshoutbox_desc" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Åñëè âû æåëàåòå ñêðûòü ÷àò îò íåêîòîðûõ ãðóï ïîëüçîâàòåëåé, âûáèðèòå èõ çäåñü. Èìåéòå ââèäó, ÷òî ýòî ÍÅ íàçíà÷èò íà íèõ áàí.]]></phrase>
+			<phrase name="setting_ishout_hideshoutbox_title" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Ñêðûòü ÷àò îò ãðóï ïîëüçîâàòåëåé.]]></phrase>
+			<phrase name="setting_ishout_idletime_desc" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Âñòàâüòå ÷èñëî ñåêóíä, êîòîðûå âû õîòèòå íàçíà÷èòü äëÿ ïîëüçîâàòåëÿ, ÷òîáû ñòàòü îæèäàþùèì â ÷àòå. Â òå÷åíèè îæèäàþùåãî ñòàòóñà ÷àò íå áóäåò îáíîâëÿòñÿ èëè âûçûâàòü êàêèå-ëèáî ðåñóðñû ñîõðàíåíèÿ äàííûõ.
+
+Ðåêîìåíäîâàíî óñòàíîâèòü 180 (3 ìèíóòû), åñëè âû õîòèòå ïðîèãíîðèðîâàòü ýòó îïöèþ, ââåäèòå ÷èñëî âûøå.]]></phrase>
+			<phrase name="setting_ishout_idletime_title" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Ðåæèì îæèäàíèÿ]]></phrase>
+			<phrase name="setting_ishout_images_desc" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Âûáåðèòå "Äà" åñëè âû õîòèòå ðàçðåøèòü ïîëüçîâàòåëÿì èñïîëüçîâàòü èçîáðàæåíèÿ â ñîîáùåíèÿõ.]]></phrase>
+			<phrase name="setting_ishout_images_title" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Ðàçðåøèòü èçîáðàæåíèÿ]]></phrase>
+			<phrase name="setting_ishout_largertext_desc" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Ïî-óìîë÷àíèþ, ÷àò áóäåò èñïîëüçîâàòü ìàëåíüêèé ðàçìåð òåêñòà, òåì-íå-ìåíåå, åñëè âû õîòèòå ýòî âûêëþ÷èòü, âû ìîæåòå ñäåëàòü ýòî, âëþ÷àÿ îïöèþ.]]></phrase>
+			<phrase name="setting_ishout_largertext_title" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Èñïîëüçîâàòü íîðìàëüíûé ðàçìåð øðèôòà]]></phrase>
+			<phrase name="setting_ishout_lockdown_desc" date="1179845409" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Â ðåæèìå "ñòðîãîé èçîëÿöèè", òîëüêî âûáðàíûì ïîëüçîâàòåëüñêèì ID ðàçðåøåíî ïèñàòü ñîîáùåíèÿ, äðóãèå ñîîáùåíèÿ èãíîðèðóþòñÿ. Ïîæàëóéñòà ââåäèòå ïîëüçîâàòåëüñêèé ID, åñëè âû õîòèòå ïèñàòü â ðåæèìå "ñòðîãîé èçîëÿöèè", ÷òîáû âûêëþ÷èòü ââåäèòå 0.]]></phrase>
+			<phrase name="setting_ishout_lockdown_title" date="1179845409" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA["Ñòðîãàÿ èçîëÿöèÿ"]]></phrase>
+			<phrase name="setting_ishout_logging_desc" date="1207178950" username="Zero Tolerance" version="2.0.0"><![CDATA[Âêëþ÷åíèå ýòîé îïöèè âûçîâåò ÷àòîâûé æóðíàë äëÿ õðàíåíèÿ (âû ìîæåòå ïîñìîòðåòü æóðíàë -  'Ñòàòèñòèêà & Æóðíàëû > Æóðíàë ÷àòà'). Òèïû æóðíàëîâ áóäóò ñîõðàíåíû:
+<br /><br />
+- Îòðåäàêòèðîâàíî ñîîáùåíèé<br />
+- Ñîîáùåíèé óäàëåíî<br />
+- êîìàíäû /ban è /unban<br />
+- êîìàíäû /silence è /unsilence<br />
+- êîìàíäû /notice
+<br /><br />
+Please note this may have an impact on performance as it will require an additional query to store the logs.]]></phrase>
+			<phrase name="setting_ishout_logging_high_desc" date="1207178977" username="Zero Tolerance" version="2.0.0"><![CDATA[This option is similar to low level logging, however it will track two specific commands only with a lot of data:
+<br /><br />
+- /prune commands
+<br />
+- /prune [username] commands
+<br /><br />
+<small>Ïîêà ýòè êîìàíäíûå ëîãè ïîäîáíû íèçêîìó óðîâíþ, ýòî òàêæå çàïîìíèò ïîëíûé ìîìåíòàëüíûé ñíèìîê shoutbox ïîñòîâ, ïîçâîëÿÿ âàì ðàññìàòðèâàòü shoutbox äàííûå â ñûðîì ôîðìàòå äî ýòîãî, áóäó÷è îáðåçàííûì. Ýòî îäíàêî îçíà÷àåò, ÷òî ìíîãî äàííûõ áóäóò çàïîìíåíû, èñïîëüçóÿ áîëüøå ðåñóðñîâ, ÷åì ðåãèñòðàöèÿ íèçêîãî óðîâíÿ.]]></phrase>
+			<phrase name="setting_ishout_logging_high_title" date="1207178977" username="Zero Tolerance" version="2.0.0"><![CDATA[Ðåãèñòðàöèÿ âûñîêîãî óðîâíÿ]]></phrase>
+			<phrase name="setting_ishout_logging_title" date="1207178950" username="Zero Tolerance" version="2.0.0"><![CDATA[Ðåãèñòðàöèÿ íèçêîãî óðîâíÿ]]></phrase>
+			<phrase name="setting_ishout_maxbbsize_desc" date="1194991374" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[Åñëè âû õîòèòå ðàçðåøèòü BB-êîä [SIZE], âû ìîæåòå îãðàíè÷èòü ñàìîå âûñîêîå ÷èñëî, âñå ââåäåíûå çíà÷åíèå âûøå áóäóò óìåíüøàòñÿ.
+<br /><br />
+Ââåäèòå 0 ÷òîáû âûêëþ÷èòü ýòó îïöèþ.]]></phrase>
+			<phrase name="setting_ishout_maxbbsize_title" date="1194991374" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[Ìàêñèìàëüíûé [SIZE]]]></phrase>
+			<phrase name="setting_ishout_notice_desc" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Ýòî áóäåò îòîáðàæåíî âûøå ñîîáùåíèé è îñòàíåòñÿ íåèçìåííûì. Òàêæå âû ìîæåòå ââåñòè óâåäîìëåíèå çäåñü èëè èñïîëüçîâàòü êîìàíäó â ÷àòå:
+<br />
+<br />
+<pre>/notice âàøå Óâåäîìëåíèå çäåñü
+/removenotice</pre>]]></phrase>
+			<phrase name="setting_ishout_notice_title" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Óâåäîìëåíèÿ ÷àòà]]></phrase>
+			<phrase name="setting_ishout_online_desc" date="1206322718" username="Zero Tolerance" version="2.0.0"><![CDATA[Ñèñòåìà ÷àòà online?]]></phrase>
+			<phrase name="setting_ishout_online_title" date="1206322718" username="Zero Tolerance" version="2.0.0"><![CDATA[×àò Online]]></phrase>
+			<phrase name="setting_ishout_pages_desc" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Îïðåäèëèòå êàêèå ñêðèïòû ÷àòà ïîêàçûâàþòñÿ. Îáðàòèòå âíèìàíèå, ìàëî òîãî, ÷òî ñêðèïò íàäî âíåñòè â ñïèñîê, íî è ñëåäóþùèé êîä áóäåò òàêæå äîëæåí áûòü ðàçìåùåííûì íà øàáëîíå â ïðåäåëàõ ñòðàíèöû:
+<pre>&lt;!--{%SHOUTBOX%}--&gt;
+èëè
+[%SHOUTBOX%]</pre>Ðàçäåëÿéòå êàæäûé ñêðèïò çàïÿòîé.]]></phrase>
+			<phrase name="setting_ishout_pages_title" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Page Deployment]]></phrase>
+			<phrase name="setting_ishout_postmarker_desc" date="1194998582" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[Ìàðêåð ñîîáùåíèÿ ýòî ñîîáùåíèå â ÷àòå, äëÿ òîãî, ÷òîáû ñêàçàòü ÷òî ïîëüçîâàòåëü äîñòèã îïðåäåëåííîãî êîëè÷åñòâà ñîîáùåíèé â èíòåðâàëàõ. Íàïðèìåð, åñëè âû ââåäèòå 100 äëÿ ýòîé îïöèè, êàæäûé ðàç, êîãäà ïîëüçîâàòåëü äîñòèãíåò 100, 200, 300, etc.. ïîñòîâ, ÷àò îòîáðàçèò ñîîòâåòñâóþùåå ñîîáùåíèå àâòîìàòè÷åñêè.
+<br /><br />
+Âèáåðèòå 0 äëÿ îòêþ÷åíèÿ îïöèè.]]></phrase>
+			<phrase name="setting_ishout_postmarker_title" date="1194998582" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[Ìàðêåð ñîîáùåíèé]]></phrase>
+			<phrase name="setting_ishout_postnoticedisable_desc" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Åñëè âû õîòèòå îòêëþ÷èòü âñå òåìû è óâåäîìëåíèÿ îòâåòà â ïðåäåëàõ ÷àòà, óñòàíîâèòå "Äà".]]></phrase>
+			<phrase name="setting_ishout_postnoticedisable_title" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Îòêëþ÷èòü óâåäîìëåíèÿ Òåì/Îòâåòîâ.]]></phrase>
+			<phrase name="setting_ishout_protectedugs_desc" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Âûáåðèòå çäåñü ãðóïïó ïîëüçîâàòåëåé äëÿ çàùèòû, è îíè íå ñìîãóò áûòü çàáàíåíû.]]></phrase>
+			<phrase name="setting_ishout_protectedugs_title" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Çàùèùåííûå ãðóïïû ïîëüçîâàòåëåé]]></phrase>
+			<phrase name="setting_ishout_sbtitle_desc" date="1207172206" username="Zero Tolerance" version="2.0.0"><![CDATA[Íàçâàíèå ÷àòà îòîáðàæàåòñÿ íà êîëîíêå êàòåãîðèé ÷àòà íà âàøèõ ôîðóìàõ.]]></phrase>
+			<phrase name="setting_ishout_sbtitle_title" date="1207172206" username="Zero Tolerance" version="2.0.0"><![CDATA[Íàçâàíèå ÷àòà]]></phrase>
+			<phrase name="setting_ishout_shoutorder_desc" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Êàê âû õîòåëè áû, ÷òîáû ñîîáùåíèÿ îòîáðàæàëèñü â ÷àòå?]]></phrase>
+			<phrase name="setting_ishout_shoutorder_title" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Ïîðÿäîê ñïèñêîâ ñîîáùåíèé]]></phrase>
+			<phrase name="setting_ishout_shouts_desc" date="1195177481" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[Âûáåðèòå êîëè÷åñòâî ñîîáùåíèé, êîòîðûå âû õîòèòå ïîêàçàòü â ïðåäåëàõ ÷àòà. ×åì âûøå ýòî ÷èñëî, òåì áîëåå èíòåíñèâíåé ÷àò ìîæåò áûòü íà âàøåì ñåðâåðå.]]></phrase>
+			<phrase name="setting_ishout_shouts_detach_desc" date="1206411426" username="Zero Tolerance" version="2.0.0"><![CDATA[Âûáåðèòå êîëè÷åñòâî ñîîáùåíèé, êîòîðûå âû õîòèòå ïîêàçàòü â ïðåäåëàõ ÷àòà <b>êîãäà îòäåëüíî</b>, ÷åì âûøå ýòî ÷èñëî, òåì áîëåå èíòåíñèâíûì ÷àò ìîæåò áûòü íà âàøåì ñåðâåðå.]]></phrase>
+			<phrase name="setting_ishout_shouts_detach_title" date="1206411426" username="Zero Tolerance" version="2.0.0"><![CDATA[Ñîîáùåíèÿ äëÿ îòîáðàæåíèÿ  (îòäåëåíî)]]></phrase>
+			<phrase name="setting_ishout_shouts_title" date="1195177481" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[Ñîîáùåíèÿ äëÿ îòîáðàæåíèÿ ]]></phrase>
+			<phrase name="setting_ishout_smilies_desc" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Âûáåðèòå "Äà", åñëè âû õîòèòå ðàçðåøèòü ïîëüçîâàòåëÿì èñïîëüçîâàòü ñìàéëèêè â ñîîáùåíèÿõ.]]></phrase>
+			<phrase name="setting_ishout_smilies_title" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Ðàçðåøèòü ñìàéëèêè]]></phrase>
+			<phrase name="setting_ishout_smiliesshow_desc" date="1206412068" username="Zero Tolerance" version="2.0.0"><![CDATA[Ââåäèòå êîëè÷åñòâî èêîíîê åìîöèé, ïîêàçûâàåìûõ, êîãäà ïîëüçîâàòåëü íàæìåò êíîïêó "Ñìàéëèêè :)" â ÷àòå. Äîëæíî áûòü áîëüøå 0.]]></phrase>
+			<phrase name="setting_ishout_smiliesshow_title" date="1206412068" username="Zero Tolerance" version="2.0.0"><![CDATA[Îòîáðàæàåìûå ñìàéëèêè]]></phrase>
+			<phrase name="setting_ishout_threadnotice_desc" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[×àò áóäåò çàïîëíåí ñîîáùåíèÿìè, êîãäà ïîëüçîâàòåëüñêèå ïîñòû èëè îòâåòû â òåìàõ èíòåãðèðóþò äåÿòåëüíîñòü ôîðóìà. Òåì íå ìåíåå âû ìîæåòå îñòàíîâèòü ýòî ïîÿâëåíèå äëÿ îïðåäåëåííûõ ôîðóìîâ. Åñëè âû äåëàåòå, ïîæàëóéñòà ââåäèòå ID ôîðóìà çäåñü, ðàçäåëÿÿ êîììîé.]]></phrase>
+			<phrase name="setting_ishout_threadnotice_title" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Óâåäîìëåíèå îñâîáîæäåíèÿ Òåì/Îòâåòîâ]]></phrase>
+			<phrase name="setting_ishout_topshouters_desc" date="1194200224" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[Ñêîëüêî ëó÷øèõ ÷àòëàí âû õîòèòå ïîêàçàòü â àðõèâå?]]></phrase>
+			<phrase name="setting_ishout_topshouters_title" date="1194200224" username="Zero Tolerance" version="1.0.1 Pro"><![CDATA[Îòîáðàæåíèå ëó÷øèõ ÷àòëàíû]]></phrase>
+			<phrase name="settinggroup__inferno_shoutbox_settings" date="1179845108" username="Zero Tolerance" version="1.0.1 Lite"><![CDATA[Íàñòðîéêè Inferno vBShout (Pro)]]></phrase>
+		</phrasetype>
+	</phrases>
+	<options>
+		<settinggroup name="_inferno_shoutbox_settings" displayorder="580">
+			<setting varname="ishout_online" displayorder="1">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>1</defaultvalue>
+			</setting>
+			<setting varname="ishout_sbtitle" displayorder="2">
+				<datatype>free</datatype>
+				<defaultvalue>×àò</defaultvalue>
+			</setting>
+			<setting varname="ishout_logging" displayorder="5">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>0</defaultvalue>
+			</setting>
+			<setting varname="ishout_logging_high" displayorder="6">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>0</defaultvalue>
+			</setting>
+			<setting varname="ishout_disable_acom" displayorder="7">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>0</defaultvalue>
+			</setting>
+			<setting varname="ishout_aop" displayorder="9">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>0</defaultvalue>
+			</setting>
+			<setting varname="ishout_archive_link" displayorder="10">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>0</defaultvalue>
+			</setting>
+			<setting varname="ishout_lockdown" displayorder="11">
+				<datatype>number</datatype>
+				<defaultvalue>0</defaultvalue>
+			</setting>
+			<setting varname="ishout_shouts" displayorder="12">
+				<datatype>number</datatype>
+				<defaultvalue>20</defaultvalue>
+			</setting>
+			<setting varname="ishout_shouts_detach" displayorder="14">
+				<datatype>number</datatype>
+				<defaultvalue>100</defaultvalue>
+			</setting>
+			<setting varname="ishout_flood" displayorder="17">
+				<datatype>number</datatype>
+				<defaultvalue>5</defaultvalue>
+			</setting>
+			<setting varname="ishout_disable_pm" displayorder="18">
+				<datatype>free</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>0</defaultvalue>
+			</setting>
+			<setting varname="ishout_largertext" displayorder="19">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>0</defaultvalue>
+			</setting>
+			<setting varname="ishout_pages" displayorder="20">
+				<datatype>free</datatype>
+				<optioncode>textarea</optioncode>
+				<defaultvalue>index</defaultvalue>
+			</setting>
+			<setting varname="ishout_globaldeploy" displayorder="21">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>0</defaultvalue>
+			</setting>
+			<setting varname="ishout_fonts" displayorder="22">
+				<datatype>free</datatype>
+				<optioncode>textarea</optioncode>
+				<defaultvalue>Arial
+Arial Black
+Arial Narrow
+Book Antiqua
+Century Gothic
+Comic Sans MS
+Courier New
+Fixedsys
+Franklin Gothic Medium
+Garamond
+Georgia
+Impact
+Lucida Console
+Microsoft Sans Serif
+Palatino Linotype
+System
+Tahoma
+Times New Roman
+Trebuchet MS
+Verdana</defaultvalue>
+			</setting>
+			<setting varname="ishout_colours" displayorder="22">
+				<datatype>free</datatype>
+				<optioncode>textarea</optioncode>
+				<defaultvalue>Red
+Blue
+Green
+Orange
+Brown
+Black
+Yellow
+Purple
+Pink
+Silver</defaultvalue>
+			</setting>
+			<setting varname="ishout_editor_position" displayorder="30">
+				<datatype>boolean</datatype>
+				<optioncode><![CDATA[<select name=\"setting[$setting[varname]]\" tabindex=\"1\" class=\"bginput\">
+<option value=\"0\" " . iif($setting['value']==0,'selected="selected"') . ">Íàä ñîîáùåíèÿìè</option>
+<option value=\"1\" " . iif($setting['value']==1,'selected="selected"') . ">Ïîä ñîîáùåíèÿìè</option>
+</select>]]></optioncode>
+				<defaultvalue>0</defaultvalue>
+			</setting>
+			<setting varname="ishout_shoutorder" displayorder="31">
+				<datatype>number</datatype>
+				<optioncode><![CDATA[<select name=\"setting[$setting[varname]]\" tabindex=\"1\" class=\"bginput\">
+<option value=\"0\" " . iif($setting['value']==0,'selected="selected"') . ">Íîâîå ñâåðõó</option>
+<option value=\"1\" " . iif($setting['value']==1,'selected="selected"') . ">Íîâîå ñíèçó</option>
+</select>]]></optioncode>
+				<defaultvalue>0</defaultvalue>
+			</setting>
+			<setting varname="ishout_height" displayorder="40">
+				<datatype>number</datatype>
+				<defaultvalue>110</defaultvalue>
+			</setting>
+			<setting varname="ishout_height_detach" displayorder="43">
+				<datatype>number</datatype>
+				<defaultvalue>350</defaultvalue>
+			</setting>
+			<setting varname="ishout_smiliesshow" displayorder="49">
+				<datatype>number</datatype>
+				<defaultvalue>8</defaultvalue>
+			</setting>
+			<setting varname="ishout_editor_tools" displayorder="50">
+				<datatype>free</datatype>
+				<optioncode>default---infernoshout---editortools</optioncode>
+			</setting>
+			<setting varname="ishout_bbcodes" displayorder="60">
+				<datatype>free</datatype>
+				<optioncode>default---infernoshout---bbcodes</optioncode>
+				<defaultvalue>12</defaultvalue>
+			</setting>
+			<setting varname="ishout_maxbbsize" displayorder="61">
+				<datatype>number</datatype>
+				<defaultvalue>3</defaultvalue>
+			</setting>
+			<setting varname="ishout_images" displayorder="70">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>1</defaultvalue>
+			</setting>
+			<setting varname="ishout_smilies" displayorder="80">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>1</defaultvalue>
+			</setting>
+			<setting varname="ishout_notice" displayorder="90">
+				<datatype>free</datatype>
+				<optioncode>textarea</optioncode>
+			</setting>
+			<setting varname="ishout_banned" displayorder="100">
+				<datatype>free</datatype>
+				<optioncode>textarea</optioncode>
+			</setting>
+			<setting varname="ishout_idletime" displayorder="110">
+				<datatype>number</datatype>
+				<defaultvalue>180</defaultvalue>
+			</setting>
+			<setting varname="ishout_admincommands" displayorder="120">
+				<datatype>free</datatype>
+				<optioncode>default---infernoshout---usergroups</optioncode>
+			</setting>
+			<setting varname="ishout_hideshoutbox" displayorder="121">
+				<datatype>free</datatype>
+				<optioncode>default---infernoshout---usergroups---hidden</optioncode>
+			</setting>
+			<setting varname="ishout_protectedugs" displayorder="122">
+				<datatype>free</datatype>
+				<optioncode>default---infernoshout---usergroups---protected</optioncode>
+			</setting>
+			<setting varname="ishout_bannedgroups" displayorder="123">
+				<datatype>free</datatype>
+				<optioncode>default---infernoshout---usergroups---bannedug</optioncode>
+			</setting>
+			<setting varname="ishout_postnoticedisable" displayorder="129">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>0</defaultvalue>
+			</setting>
+			<setting varname="ishout_threadnotice" displayorder="130">
+				<datatype>free</datatype>
+				<optioncode>textarea</optioncode>
+			</setting>
+			<setting varname="ishout_ajaxrefresh" displayorder="140">
+				<datatype>number</datatype>
+				<defaultvalue>5</defaultvalue>
+			</setting>
+			<setting varname="ishout_autoidle" displayorder="150">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>0</defaultvalue>
+			</setting>
+			<setting varname="ishout_topshouters" displayorder="160">
+				<datatype>number</datatype>
+				<defaultvalue>10</defaultvalue>
+			</setting>
+			<setting varname="ishout_autodelete" displayorder="170">
+				<datatype>number</datatype>
+				<defaultvalue>1800</defaultvalue>
+			</setting>
+			<setting varname="ishout_archiveperm" displayorder="180">
+				<datatype>free</datatype>
+				<optioncode>default---infernoshout---usergroups---archiveperm</optioncode>
+			</setting>
+			<setting varname="ishout_archive_search" displayorder="181">
+				<datatype>free</datatype>
+				<optioncode>default---infernoshout---usergroups---archivesearchperm</optioncode>
+			</setting>
+			<setting varname="ishout_postmarker" displayorder="190">
+				<datatype>number</datatype>
+				<defaultvalue>100</defaultvalue>
+			</setting>
+		</settinggroup>
+	</options>
+	<helptopics>
+	</helptopics>
+	<cronentries>
+	</cronentries>
+	<faqentries>
+	</faqentries>
+</product>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<bitfields product="_inferno_shout">
+	<bitfielddefs>
+		<group name="nocache">
+			<group name="infernshout_bbcodes">
+				<bitfield name="allow_bbcode_basic">1</bitfield>
+				<bitfield name="allow_bbcode_color">2</bitfield>
+				<bitfield name="allow_bbcode_size">4</bitfield>
+				<bitfield name="allow_bbcode_font">8</bitfield>
+				<bitfield name="allow_bbcode_align">16</bitfield>
+				<bitfield name="allow_bbcode_list">32</bitfield>
+				<bitfield name="allow_bbcode_link">64</bitfield>
+				<bitfield name="allow_bbcode_code">128</bitfield>
+				<bitfield name="allow_bbcode_php">256</bitfield>
+				<bitfield name="allow_bbcode_html">512</bitfield>
+			</group>
+			<group name="infernshout_editortools">
+				<bitfield name="tool_bold">1</bitfield>
+				<bitfield name="tool_underline">2</bitfield>
+				<bitfield name="tool_italic">4</bitfield>
+				<bitfield name="tool_color">8</bitfield>
+				<bitfield name="tool_font">16</bitfield>
+				<bitfield name="tool_clear">32</bitfield>
+				<bitfield name="Smilies">64</bitfield>
+			</group>
+		</group>
+	</bitfielddefs>
+</bitfields>

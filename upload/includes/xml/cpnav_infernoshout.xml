@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<navgroups product="_inferno_shoutbox">
+	<navgroup phrase="statistics_and_logs" displayorder="240">
+
+		<navoption displayorder="200">
+			<text>Inferno Shoutbox Log</text>
+			<link>infernoshoutlog.php</link>
+		</navoption>
+
+	</navgroup>
+</navgroups>
